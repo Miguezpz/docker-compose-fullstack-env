@@ -1,0 +1,48 @@
+version: "3.8"
+
+# ========= COMANDOS DOCKER EQUIVALENTES =========
+#
+#
+# docker compose up --build -d
+# docker compose down
+#
+# Backend:
+# docker run --rm -d -p 3000:3000 --name backend random-number-app:latest
+#
+# Frontend:
+# docker run --rm -d -p 8080:80 --name frontend mywebsite:latest
+#
+# Volumen de desarrollo:
+# docker run -p 8080:80 --network randomNumber \
+#   -v "$(pwd)/nginxFrontEnd/website:/usr/share/nginx/html" mywebsite:latest
+# ================================================
+
+services:
+
+  backend:
+    image: node_backend:latest
+    build: 
+      context: ./nodeBackEnd
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - node_and_nginx_network
+
+  frontend:
+    image: nginx_frontend:latest
+    build:
+      context: ./nginxFrontEnd
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - node_and_nginx_network
+    volumes:
+      - ./nginxFrontEnd/website:/usr/share/nginx/html
+
+networks:
+  node_and_nginx_network:
+    driver: bridge

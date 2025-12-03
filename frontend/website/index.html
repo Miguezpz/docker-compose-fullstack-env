@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number</title>
+
+    <style>
+        :root {
+            --bg: #f2f7ff;
+            --card-bg: #ffffff;
+            --primary: #4a80f0;
+            --primary-dark: #3a6bd1;
+            --text: #1a1a1a;
+            --border: #e0e6f0;
+            --radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: "Inter", Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            width: 350px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: var(--primary-dark);
+        }
+
+        .display-box {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: #f8faff;
+            min-height: 45px;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .small-text {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>Random Number Generator</h1>
+
+        <button id="button_get_number">Generate Number</button>
+        <div class="display-box" id="span_number">—</div>
+
+        <button id="btn_get_generated_numbers">Show Previous Numbers</button>
+        <div class="display-box" id="span_generated_number">—</div>
+
+        <div class="small-text">Powered by your Node backend 🚀</div>
+    </div>
+
+    <script>
+        const BTN_GENERATE = document.getElementById('button_get_number');
+        const OUT_NUMBER = document.getElementById('span_number');
+        const BTN_HISTORY = document.getElementById('btn_get_generated_numbers');
+        const OUT_HISTORY = document.getElementById('span_generated_number');
+
+        BTN_GENERATE.addEventListener('click', async () => {
+            try {
+                const res = await fetch("http://localhost:3000/my-app/generateNumber");
+                const data = await res.json();
+
+                OUT_NUMBER.textContent = data.generated;
+
+            } catch (err) {
+                console.error(err);
+                alert("⚠️ Please run your Node server");
+            }
+        });
+
+        BTN_HISTORY.addEventListener('click', async () => {
+            try {
+                const res = await fetch("http://localhost:3000/my-app/seeNumbers");
+                const data = await res.json();
+
+                OUT_HISTORY.textContent = data.generated.join(", ");
+
+            } catch (err) {
+                console.error(err);
+                alert("⚠️ Please run your Node server");
+            }
+        });
+    </script>
+
+</body>
+</html>
