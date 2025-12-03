@@ -24,18 +24,16 @@ version: "3.8"
 # Dev volume example (hot reload for frontend):
 #   docker run --rm -d -p 8080:80 \
 #     --network app_network --name frontend \
-#     -v "$(pwd)/nginxFrontEnd/website:/usr/share/nginx/html" \
+#     -v "$(pwd)/frontend/website:/usr/share/nginx/html" \
 #     miguezpz/website:latest
 # ===============================
-
-
 
 services:
 
   backend:
     container_name: backend
     build:
-      context: ./nodeBackEnd
+      context: ./backend
       dockerfile: Dockerfile
     image: node_backend:latest
     ports:
@@ -46,7 +44,7 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: ./nginxFrontEnd
+      context: ./frontend
       dockerfile: Dockerfile
     image: nginx_frontend:latest
     ports:
@@ -56,7 +54,7 @@ services:
     networks:
       - app_network
     volumes:
-      - ./nginxFrontEnd/website:/usr/share/nginx/html
+      - ./frontend/website:/usr/share/nginx/html
 
 networks:
   app_network:
